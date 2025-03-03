@@ -31,6 +31,7 @@ class _TaskCardState extends State<TaskCard> {
     priority = widget.task.priority;
   }
 
+  //File Picker
   Future<void> _pickAttachments() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true);
 
@@ -45,6 +46,7 @@ class _TaskCardState extends State<TaskCard> {
     }
   }
 
+  //File remove
   void _removeFile(int index) {
     setState(() {
       _selectedFiles.removeAt(index);
@@ -62,7 +64,7 @@ class _TaskCardState extends State<TaskCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// Task Title & Priority
+            // Task Title & Priority
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -88,17 +90,17 @@ class _TaskCardState extends State<TaskCard> {
             ),
             const SizedBox(height: 10),
 
-            /// Task Details
+            // Task Details
             _buildTaskDetail(Icons.calendar_today, "Date", widget.task.date),
             _buildTaskDetail(Icons.location_on, "Location", widget.task.location),
             _buildTaskDetail(Icons.description, "Description", widget.task.description),
             _buildTaskDetail(Icons.person, "Assigned To", assignedTo, isBold: true),
-
             const SizedBox(height: 16),
+            //Radio Buttons
+            if (showAssignOptions)
+              Row(children: [_buildRadioOption("Self"), _buildRadioOption("Employee")]),
 
-            if (showAssignOptions) Row(children: [_buildRadioOption("Self"), _buildRadioOption("Employee")]),
-
-            /// Buttons
+            // Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -129,6 +131,7 @@ class _TaskCardState extends State<TaskCard> {
     );
   }
 
+  //Building Task Details
   Widget _buildTaskDetail(IconData icon, String label, String value, {bool isBold = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6.0),
@@ -150,7 +153,7 @@ class _TaskCardState extends State<TaskCard> {
       ),
     );
   }
-
+  //Building RadioButtons
   Widget _buildRadioOption(String value) {
     return Row(
       children: [
@@ -170,7 +173,7 @@ class _TaskCardState extends State<TaskCard> {
       ],
     );
   }
-
+  //Show BottomSheet here
   void _showEmployeePicker(BuildContext context) async {
     List<Map<String, String>> employees = [
       {"name": "John Doe", "image": "https://randomuser.me/api/portraits/men/1.jpg"},
@@ -254,9 +257,7 @@ class _TaskCardState extends State<TaskCard> {
       });
     }
   }
-
-
-
+  //Show Status Dialog -- Can change status here
   void _showStatusDialog(BuildContext context) {
     String newStatus = status;
     String newPriority = priority;
@@ -386,7 +387,7 @@ class _TaskCardState extends State<TaskCard> {
       },
     );
   }
-
+  //Building Buttons
   Widget _buildButton(String text, VoidCallback onPressed, {Color? color, Widget? child}) {
     return ElevatedButton(
       onPressed: onPressed,
@@ -402,7 +403,7 @@ class _TaskCardState extends State<TaskCard> {
     );
   }
 
-
+  //Priority Color
   Color priorityColor(String priority) {
     switch (priority.toLowerCase()) {
       case 'high': return Colors.red.shade300;
@@ -411,7 +412,7 @@ class _TaskCardState extends State<TaskCard> {
       default: return Colors.grey;
     }
   }
-
+  //Status Color
   Color statusColor(String status) {
     switch (status.toLowerCase()) {
       case 'pending': return Colors.red;

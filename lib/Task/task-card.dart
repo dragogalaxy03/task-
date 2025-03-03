@@ -365,7 +365,6 @@ class _TaskCardState extends State<TaskCard> {
               onPressed: () {
                 setState(() {
                   status = newStatus;
-                  priority = newPriority;
                 });
                 widget.onStatusChanged(newStatus, newPriority);
                 Navigator.pop(context);

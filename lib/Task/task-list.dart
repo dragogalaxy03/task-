@@ -4,8 +4,6 @@ import 'package:taskcard/Task/task-json.dart';
 import 'package:taskcard/Task/task-model.dart';
 
 class TaskListScreen extends StatefulWidget {
-  TaskListScreen({Key? key}) : super(key: key);
-
   @override
   _TaskListScreenState createState() => _TaskListScreenState();
 }
@@ -38,7 +36,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
             task: tasks[index],
             onStatusChanged: (newStatus, newPriority) =>
                 _updateTaskStatus(index, newStatus, newPriority),
-            onAssignEmployee: (newAssignedTo) => _updateAssignedTo(index, newAssignedTo), // ✅ Update assigned employee
+            onAssignEmployee: (newAssignedTo) => _updateAssignedTo(index, newAssignedTo),
           );
         },
       ),

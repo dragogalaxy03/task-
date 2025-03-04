@@ -46,7 +46,7 @@ class TaskJson {
       date: "March 5, 2025",
       description: "Design the main dashboard UI for the app",
       location: "Remote",
-      assignedTo: "Ashish Kumar",
+      assignedTo: "Ashish",
       status: "Pending",
     ),
     Task(
@@ -55,7 +55,7 @@ class TaskJson {
       date: "March 6, 2025",
       description: "Develop REST APIs for user authentication",
       location: "On-Site",
-      assignedTo: "John Doe",
+      assignedTo: "",
       status: "In Progress",
     ),
     Task(
@@ -64,7 +64,7 @@ class TaskJson {
       date: "March 10, 2025",
       description: "Perform UI/UX and functional testing",
       location: "Remote",
-      assignedTo: "Jane Smith",
+      assignedTo: "",
       status: "Completed",
     ),
   ];

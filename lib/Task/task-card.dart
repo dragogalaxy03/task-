@@ -15,8 +15,8 @@ class TaskCard extends StatefulWidget {
 }
 
 class _TaskCardState extends State<TaskCard> {
-  String assignedTo = "Unassigned";
-  String assignOption = "Self";
+  String? assignedTo;
+  String? assignOption;
   bool showAssignOptions = false;
   late String status;
   late String priority;
@@ -29,6 +29,7 @@ class _TaskCardState extends State<TaskCard> {
     super.initState();
     status = widget.task.status ?? "Pending";
     priority = widget.task.priority;
+    assignedTo = widget.task.assignedTo?.isEmpty ?? true ? "Unassigned" : widget.task.assignedTo;
   }
 
   //File Picker
@@ -89,26 +90,20 @@ class _TaskCardState extends State<TaskCard> {
               ],
             ),
             const SizedBox(height: 10),
-
             // Task Details
             _buildTaskDetail(Icons.calendar_today, "Date", widget.task.date),
             _buildTaskDetail(Icons.location_on, "Location", widget.task.location),
             _buildTaskDetail(Icons.description, "Description", widget.task.description),
-            _buildTaskDetail(Icons.person, "Assigned To", assignedTo, isBold: true),
+            _buildTaskDetail(Icons.person, "Assigned To", assignedTo?? "Unassigned", isBold: true),
             const SizedBox(height: 16),
             //Radio Buttons
             if (showAssignOptions)
               Row(children: [_buildRadioOption("Self"), _buildRadioOption("Employee")]),
-
             // Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildButton(
-                  "Assign",
-                      () => setState(() => showAssignOptions = true),
-                ),
-
+                _buildButton("Assign", () => setState(() => showAssignOptions = !showAssignOptions)),
                 _buildButton(
                   status,
                       () => _showStatusDialog(context),
@@ -163,8 +158,12 @@ class _TaskCardState extends State<TaskCard> {
           onChanged: (val) {
             setState(() {
               assignOption = val.toString();
-              assignedTo = value == "Self" ? "Self" : "Unassigned";
-              if (value == "Employee") _showEmployeePicker(context);
+              if (value == "Self") {
+                assignedTo = "Self";
+                widget.onAssignEmployee?.call("Self");
+              } else {
+                _showEmployeePicker(context);
+              }
               showAssignOptions = false;
             });
           },
@@ -197,6 +196,7 @@ class _TaskCardState extends State<TaskCard> {
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               /// Top Row with Title & Close Button

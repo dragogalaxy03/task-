@@ -7,7 +7,7 @@ class TaskCard extends StatefulWidget {
   final Function(String, String) onStatusChanged;
   final Function(String newAssignedTo)? onAssignEmployee;
 
-  const TaskCard({Key? key, required this.task, required this.onStatusChanged, this.onAssignEmployee})
+  const TaskCard({Key? key, required this.task, required this. onStatusChanged, this.onAssignEmployee})
       : super(key: key);
 
   @override
@@ -261,131 +261,133 @@ class _TaskCardState extends State<TaskCard> {
   void _showStatusDialog(BuildContext context) {
     String newStatus = status;
     String newPriority = priority;
-
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("Update Task Status"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DropdownButtonFormField<String>(
-                value: newStatus,
-                items: ["Pending", "In Progress", "Completed"].map((status) {
-                  return DropdownMenuItem(value: status, child: Text(status));
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    newStatus = value!;
-                  });
-                },
-                decoration: const InputDecoration(border: OutlineInputBorder()),
-              ),
-              /// Note Field
-              const Text("Add Note", style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 5),
-              TextField(
-                controller: noteController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  hintText: "Write any additional notes...",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              /// Attachments Section
-              const Text("Attach a File", style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 5),
-              InkWell(
-                onTap: _pickAttachments,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.black, width: 0.8),
-                    boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
+        return StatefulBuilder(
+          builder: (context, setDialogState) {  // <--- Use StatefulBuilder
+            return AlertDialog(
+              title: const Text("Update Task Status"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DropdownButtonFormField<String>(
+                    value: newStatus,
+                    items: ["Pending", "In Progress", "Completed"].map((status) {
+                      return DropdownMenuItem(value: status, child: Text(status));
+                    }).toList(),
+                    onChanged: (value) {
+                      setDialogState(() { // <-- Use setDialogState instead of setState
+                        newStatus = value!;
+                      });
+                    },
+                    decoration: const InputDecoration(border: OutlineInputBorder()),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          _selectedFiles.isNotEmpty
-                              ? "${_selectedFiles.length} file(s) selected"
-                              : "No files selected",
-                          style: const TextStyle(fontSize: 16, color: Colors.black),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                  const SizedBox(height: 10),
+                  const Text("Add Note", style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 5),
+                  TextField(
+                    controller: noteController,
+                    maxLines: 3,
+                    decoration: const InputDecoration(
+                      hintText: "Write any additional notes...",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text("Attach a File", style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 5),
+                  InkWell(
+                    onTap: () async {
+                      await _pickAttachments();
+                      setDialogState(() {}); // <--- Update dialog UI after picking files
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.black, width: 0.8),
+                        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
                       ),
-                      const Icon(Icons.attach_file, color: Colors.blue),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-
-              /// Display selected files
-              if (_selectedFiles.isNotEmpty)
-                Column(
-                  children: _selectedFiles.asMap().entries.map((entry) {
-                    int index = entry.key;
-                    PlatformFile file = entry.value;
-
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 4),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Icon(Icons.insert_drive_file, color: Colors.grey),
-                          const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              file.name,
-                              style: const TextStyle(fontSize: 14, color: Colors.black),
+                              _selectedFiles.isNotEmpty
+                                  ? "${_selectedFiles.length} file(s) selected"
+                                  : "No files selected",
+                              style: const TextStyle(fontSize: 16, color: Colors.black),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.close, color: Colors.red, size: 18),
-                            onPressed: () => _removeFile(index),
-                          ),
+                          const Icon(Icons.attach_file, color: Colors.blue),
                         ],
                       ),
-                    );
-                  }).toList(),
-                ),
-            ],
-          ),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  status = newStatus;
-                });
-                widget.onStatusChanged(newStatus, newPriority);
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Change button color
-                foregroundColor: Colors.white, // Change text color
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Adjust padding
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10), // Rounded corners
-                ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  if (_selectedFiles.isNotEmpty)
+                    Column(
+                      children: _selectedFiles.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        PlatformFile file = entry.value;
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.insert_drive_file, color: Colors.grey),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  file.name,
+                                  style: const TextStyle(fontSize: 14, color: Colors.black),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.close, color: Colors.red, size: 18),
+                                onPressed: () {
+                                  setDialogState(() {  // <-- Use setDialogState here
+                                    _removeFile(index);
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                ],
               ),
-              child: const Text("Update"),
-            ),
-
-
-          ],
+              actions: [
+                TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      status = newStatus;
+                    });
+                    widget.onStatusChanged(newStatus, newPriority);
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  child: const Text("Update"),
+                ),
+              ],
+            );
+          },
         );
       },
     );
   }
+
   //Building Buttons
   Widget _buildButton(String text, VoidCallback onPressed, {Color? color, Widget? child}) {
     return ElevatedButton(

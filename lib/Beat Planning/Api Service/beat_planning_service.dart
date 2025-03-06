@@ -17,8 +17,8 @@ class BeatPlanningService {
       "Content-Type": "application/json",
     };
 
-    print("🔹 [API Request] GET $url");
-    print("🔹 [Headers] $headers");
+    // print("🔹 [API Request] GET $url");
+    // print("🔹 [Headers] $headers");
 
     try {
       final response = await http.get(url, headers: headers);

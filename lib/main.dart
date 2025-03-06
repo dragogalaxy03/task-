@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:taskcard/Beat%20Planning/beat-planning-screen.dart';
 import 'package:taskcard/Report/report-screen.dart';
@@ -6,7 +7,12 @@ import 'Task/task-card.dart';
 import 'Task/task-model.dart'; // Ensure correct import path
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    DevicePreview(
+      enabled: true, // Set to false for production
+      builder: (context) => const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +27,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: BeatPlanningScreen(),
+      home: const BeatPlanningScreen(),
+      builder: DevicePreview.appBuilder, // Add this for preview support
+      locale: DevicePreview.locale(context), // Sync locale with preview
     );
   }
 }
+

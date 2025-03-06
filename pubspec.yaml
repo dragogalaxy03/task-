@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   file_picker: ^9.0.2
   animate_do: ^4.2.0
+  device_preview: ^1.2.0
+  http:
 
 dev_dependencies:
   flutter_test:

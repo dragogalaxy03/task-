@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: StockUpdateScreen(),
+      home: BeatPlanningScreen(),
       builder: DevicePreview.appBuilder, // Add this for preview support
       locale: DevicePreview.locale(context), // Sync locale with preview
     );

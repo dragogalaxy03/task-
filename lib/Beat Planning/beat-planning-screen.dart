@@ -101,6 +101,7 @@ class _BeatPlanningScreenState extends State<BeatPlanningScreen>
         }))
             .toList();
 
+        print(beats);
         isLoading = false;
       });
     } catch (error) {
@@ -110,10 +111,6 @@ class _BeatPlanningScreenState extends State<BeatPlanningScreen>
       });
     }
   }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +202,7 @@ class _BeatPlanningScreenState extends State<BeatPlanningScreen>
                       children: [
                         _infoRow(Icons.person, beat["user_name"] ?? "-",
                             isBold: true),
-                        // _infoRow(Icons.calendar_today, beat["date"] ?? "-"),
+                        _infoRow(Icons.calendar_today, beat["date"] ?? "-"),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -239,36 +236,36 @@ class _BeatPlanningScreenState extends State<BeatPlanningScreen>
                                 fontWeight: FontWeight.w600)),
                       ),
                       const SizedBox(height: 10),
-                      //task order and pending container
-                      // Container(
-                      //   padding: const EdgeInsets.all(12),
-                      //   decoration: BoxDecoration(
-                      //       color: Colors.grey.shade100,
-                      //       borderRadius: BorderRadius.circular(10)),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     children: [
-                      //       //Task
-                      //       _infoRow(Icons.description,
-                      //           "${beat["tasks"]} Tasks"),
-                      //       //Order
-                      //       _infoRow(Icons.shopping_cart,
-                      //           "${beat["orders"]} Orders"),
-                      //       //Pending
-                      //       _infoRow(Icons.pending_actions,
-                      //           "${beat["pending"]} Pending"),
-                      //     ],
-                      //   ),
-                      // ),
-                      // const SizedBox(height: 10),
+                      // task order and pending container
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            //Task
+                            _infoRow(Icons.description,
+                                "${beat["tasks"]} Tasks"),
+                            //Order
+                            _infoRow(Icons.shopping_cart,
+                                "${beat["orders"]} Orders"),
+                            //Pending
+                            _infoRow(Icons.pending_actions,
+                                "${beat["pending"]} Pending"),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
 
-                      //Checkout
-                    //   _animatedButton(
-                    //       "Check-out", Colors.red.shade900, Icons.logout),
-                    // ] else ...[
-                    //   //Checkin
-                    //   _animatedButton(
-                    //       "Check-in", Colors.blue.shade700, Icons.login),
+                      // Checkout
+                      _animatedButton(
+                          "Check-out", Colors.red.shade900, Icons.logout),
+                    ] else ...[
+                      //Checkin
+                      _animatedButton(
+                          "Check-in", Colors.blue.shade700, Icons.login),
                     ],
                   ],
                 ),
